@@ -21,5 +21,5 @@ from products import urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('product/', include('products.urls')),
+    path('api/product/', include('products.urls')),
 ]

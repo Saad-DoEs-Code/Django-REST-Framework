@@ -14,8 +14,12 @@ get_response = requests.get(endpoint)
 # print(get_response.json())
 
 """         CALLING DATA FROM PRODUCT MODELS        """
-endpoint = "http://127.0.0.1:8000/product/"
-get_response = requests.get(endpoint) 
-print(get_response.json())
+# endpoint = "http://127.0.0.1:8000/product/get"
+# get_response = requests.get(endpoint) 
+# print(get_response.json())
 # print("yes")
 
+"""         POSTING DATA TO MODELS"         """
+endpoint = "http://127.0.0.1:8000/product/post"
+post_request = requests.post(endpoint,json={"title":"Iphone 13", "price":200000})
+print(post_request.json())
