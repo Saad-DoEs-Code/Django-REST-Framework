@@ -39,7 +39,28 @@ class ProductCreateAPIView(generics.CreateAPIView):
             # price = 0
             serializer.save(content=content)
 
+class ProductUpdateView(generics.UpdateAPIView):
 
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if not instance.content:
+            instance.content = "No content"
+    
+class ProductDeleteView(generics.DestroyAPIView):
+
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+
+    def perform_destroy(self, instance):
+        return super().perform_destroy(instance)
+    
+    
 """Function Based View to Create or Retrieve List View"""
 
 
