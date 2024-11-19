@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics,mixins
 from .serializers import ProductSerializer
 from .models import Product
 
@@ -62,6 +62,50 @@ class ProductDeleteView(generics.DestroyAPIView):
     
     
 """Function Based View to Create or Retrieve List View"""
+
+class ProductMixinView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.UpdateModelMixin,
+    generics.GenericAPIView):
+
+    # ListModelMixin allows us to declare queryset, serializer_class
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    # The lookup_field works with RetrieceAPIView(detail view)
+    lookup_field = 'pk'
+
+    def get(self, request, *args, **kwargs):
+        
+        pk = kwargs.get("pk")
+        if pk is not None:
+            print(args)
+            print(kwargs)
+            return self.retrieve(request, *args, **kwargs)
+        print(args)
+        print(kwargs)
+        return self.list(request,*args,**kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        print(request.body)
+        return self.create(request,*args, **kwargs)
+    
+    def perform_create(self, serializer):
+        title = serializer.validated_data.get('title')
+        price = serializer.validated_data.get("price")
+        content = serializer.validated_data.get('content') or None
+        if content == None:
+            content = "Created with mixin"
+            # price = 0
+            serializer.save(content=content)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+    
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
 
 @api_view(["GET", "POST"])
