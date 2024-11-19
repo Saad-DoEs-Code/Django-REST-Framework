@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 
 """PERMISSIONS AND AUTHENTICATION"""
 from .permissions import IsStaffPermissions
+from products.authentication import TokenAuthentication
 
 
 class ProductsDetailView(generics.RetrieveAPIView):
@@ -26,7 +27,8 @@ class ProductsListCreateView(generics.ListCreateAPIView):
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsStaffPermissions]
+    # authentication_classes = [TokenAuthentication, authentication.SessionAuthentication] Commented due to Default defined in REST_FRAMEWORK in settings.py
+    permission_classes = [permissions.IsAdminUser,IsStaffPermissions]
 
 
 class ProductCreateAPIView(generics.CreateAPIView):
