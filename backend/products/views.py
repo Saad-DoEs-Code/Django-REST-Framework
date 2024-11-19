@@ -1,4 +1,4 @@
-from rest_framework import generics,mixins
+from rest_framework import generics,mixins,permissions, authentication
 from .serializers import ProductSerializer
 from .models import Product
 
@@ -8,6 +8,9 @@ from rest_framework.decorators import api_view
 from django.http import Http404
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+
+"""PERMISSIONS AND AUTHENTICATION"""
+from .permissions import IsStaffPermissions
 
 
 class ProductsDetailView(generics.RetrieveAPIView):
@@ -23,12 +26,15 @@ class ProductsListCreateView(generics.ListCreateAPIView):
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsStaffPermissions]
 
 
 class ProductCreateAPIView(generics.CreateAPIView):
 
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         title = serializer.validated_data.get('title')
