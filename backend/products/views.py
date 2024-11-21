@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
 """PERMISSIONS AND AUTHENTICATION"""
-from .permissions import IsStaffPermissions
-from products.authentication import TokenAuthentication
+from ..api.permissions import IsStaffPermissions
+from backend.api.authentication import TokenAuthentication
 
 
 class ProductsDetailView(generics.RetrieveAPIView):
