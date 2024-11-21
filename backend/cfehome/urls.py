@@ -24,4 +24,5 @@ urlpatterns = [
     path('auth/', obtain_auth_token),
     path('api/', include('api.urls')),
     path('api/product/', include('products.urls')),
+    path('api/v2/', include('cfehome.routers')),
 ]

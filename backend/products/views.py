@@ -10,17 +10,18 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
 """PERMISSIONS AND AUTHENTICATION"""
-from ..api.permissions import IsStaffPermissions
-from backend.api.authentication import TokenAuthentication
+
+from api.mixins import StaffPermissionsMixin
+from api.authentication import TokenAuthentication
 
 
-class ProductsDetailView(generics.RetrieveAPIView):
+class ProductsDetailView(StaffPermissionsMixin,generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     # lookup_fieled = 'pk'
 
 
-class ProductsListCreateView(generics.ListCreateAPIView):
+class ProductsListCreateView(StaffPermissionsMixin,generics.ListCreateAPIView):
     """Takes
     GET Method: to list all the objects from DB,
     POST Method: to create a new object
@@ -28,15 +29,15 @@ class ProductsListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     # authentication_classes = [TokenAuthentication, authentication.SessionAuthentication] Commented due to Default defined in REST_FRAMEWORK in settings.py
-    permission_classes = [permissions.IsAdminUser,IsStaffPermissions]
+    # permission_classes = [permissions.IsAdminUser,IsStaffPermissions]
 
 
-class ProductCreateAPIView(generics.CreateAPIView):
+class ProductCreateAPIView(StaffPermissionsMixin,generics.CreateAPIView):
 
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     authentication_classes = [authentication.SessionAuthentication]
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         title = serializer.validated_data.get('title')
@@ -47,7 +48,7 @@ class ProductCreateAPIView(generics.CreateAPIView):
             # price = 0
             serializer.save(content=content)
 
-class ProductUpdateView(generics.UpdateAPIView):
+class ProductUpdateView(StaffPermissionsMixin,generics.UpdateAPIView):
 
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -59,7 +60,7 @@ class ProductUpdateView(generics.UpdateAPIView):
         if not instance.content:
             instance.content = "No content"
     
-class ProductDeleteView(generics.DestroyAPIView):
+class ProductDeleteView(StaffPermissionsMixin,generics.DestroyAPIView):
 
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -77,6 +78,7 @@ class ProductMixinView(
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
     mixins.UpdateModelMixin,
+    StaffPermissionsMixin,
     generics.GenericAPIView):
 
     # ListModelMixin allows us to declare queryset, serializer_class

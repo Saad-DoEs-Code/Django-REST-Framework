@@ -7,8 +7,8 @@ urlpatterns = [
     # path('post', views.api_post, name='post_product'),
     # """MADE FOR GENERIC API VIEWS"""
     path('',views.ProductCreateAPIView.as_view(),),
-    path('<int:pk>/', views.ProductsDetailView.as_view()),
-    path('<int:pk>/update/', views.ProductUpdateView.as_view()),
+    path('<int:pk>/', views.ProductsDetailView.as_view(), name= 'product-detail'),
+    path('<int:pk>/update/', views.ProductUpdateView.as_view(), name='product-edit'),
     path('<int:pk>/delete/', views.ProductDeleteView.as_view()),
     path('list/', views.ProductsListCreateView.as_view()),
     # """MADE FOR MIXIN VIEWS"""
